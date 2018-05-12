@@ -10,6 +10,7 @@ let server = http.createServer((req, res) => {
 
 const io = require('socket.io').listen(server)
 io.sockets.on('connection', socket => {
-	console.log("hello");
+	socket.emit('message', 'hello from serv');
+	socket.emit('message', 'hello 2 from serv');
 });
 server.listen(8080);
