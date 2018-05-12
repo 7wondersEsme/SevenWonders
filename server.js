@@ -2,7 +2,18 @@ const http = require('http');
 const fs = require('fs');
 
 let server = http.createServer((req, res) => {
-	fs.readFile('./index.html', 'utf-8', (error, content) => {
+	let path = req.url;
+	switch(path) {
+		case '/client.js':
+			path = "./client.js";
+			break;
+		case '/jquery-3.3.1.js':
+			path = "./jquery-3.3.1.js";
+			break;
+		default:
+			path = "./index.html";
+	}
+	fs.readFile(path, 'utf-8', (error, content) => {
 		res.writeHead(200, {"Content-Type": "text/html"});
 		res.end(content);
 	});
