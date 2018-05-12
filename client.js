@@ -6,5 +6,8 @@ socket.on('ready', () => {
 	$("p").on('click', () => {
 		socket.emit('action', 'test du click sur paragraphe');
 	});
+	$("button").on('click', () => {
+		socket.emit('action', 'test bouton');
+	});
 	console.log("ready");
 });

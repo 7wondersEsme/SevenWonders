@@ -23,7 +23,7 @@ const io = require('socket.io').listen(server)
 io.sockets.on('connection', socket => {
 	socket.on('action', action => {
 		console.log('action: ' + action);
-		socket.emit('message', 'action taken into account');
+		socket.emit('message', 'action taken into account: ' + action);
 	});
 	socket.emit('ready');
 //	socket.emit('message', 'hello from serv');
