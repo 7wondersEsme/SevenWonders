@@ -14,7 +14,7 @@ class Army {
 		this.worldEvents_.on('allDead', () => {
 			for(let i=0; i < this.soldiers_.length; i++) {
 				if(this.soldiers_[i].isAlive) {
-					this.soldiers_[i].die();
+					this.soldiers_[i].kill();
 				}
 			}
 		});
