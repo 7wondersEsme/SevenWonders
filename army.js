@@ -83,11 +83,6 @@ class Army extends Entity{
 		});
 	}
 
-  allDie() {
-		this.allDead_ = true;
-		this.worldEvents_.emit('allDead');
-	}
-
 	get count() {
 		let count_ = 0;
 		for(let i = 0; i < this.soldiers_.length; i++) {

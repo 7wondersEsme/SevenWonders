@@ -90,22 +90,6 @@ describe('army.js', () => {
 			a1.valids.should.be.equal(0);
 			a1.count.should.be.equal(0);
 		});
-
-		it('should emit an allDead event', async () => {
-			a1.count.should.be.equal(100);
-			a2.count.should.be.equal(100);
-			a2.valids.should.be.equal(100);
-			for(let i = 0; i < a1.soldiers.length - 1; i++) {
-				a1.soldiers[i].hurt();
-			}
-			a1.valids.should.be.equal(1);
-			a1.worldEvents.on('allDead', () => {
-				a1.allDead.should.be.equal(true);
-				a1.valids.should.be.equal(0);
-				a1.count.should.be.equal(0);
-			});
-			await Promise.all([a1.attack(a2)]);
-		});
 	});
 	describe('move army', async () => {
 		let a;
