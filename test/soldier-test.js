@@ -41,7 +41,7 @@ describe('soldier.js', () => {
 
 		it('should kill soldier', async () => {
 			s.isAlive.should.be.equal(true);
-			s.kill();
+			s.endWorld();
 			s.isAlive.should.be.equal(false);
 		});
 
@@ -50,7 +50,7 @@ describe('soldier.js', () => {
 			s.worldEvents.on('die', () => {
 				s.isAlive.should.be.equal(false);
 			});
-			s.kill();
+			s.endWorld();
 		});
 	});
 

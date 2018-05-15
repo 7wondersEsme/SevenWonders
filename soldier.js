@@ -24,13 +24,8 @@ class Soldier {
     }, this.timeFactor);
   }
 
-
   hurt() {
 		this.hurt_ = true;
-	}
-
-	kill() {
-		this.alive_ = false;
 	}
 
   get isHurt() {
@@ -58,6 +53,7 @@ class Soldier {
 	}
 
   endWorld() {
+		this.alive_ = false;
     clearInterval(this.gaiaInterval_);
   }
 }

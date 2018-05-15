@@ -11,7 +11,7 @@ describe('army.js', () => {
   describe('Army', () => {
     let a;
     beforeEach(() => {
-      a = new Army('test', 1);
+      a = new Army('test', 0, 0, 1);
     });
 
     afterEach(() => {
@@ -38,8 +38,8 @@ describe('army.js', () => {
 		let a2;
 
 		beforeEach(() => {
-			a1 = new Army('A1', 1);
-			a2 = new Army('A2', 1);
+			a1 = new Army('A1', 0, 0, 1);
+			a2 = new Army('A2', 0, 0, 1);
 			a1.add(100);
 			a2.add(100);
 			a1.init();
@@ -86,9 +86,7 @@ describe('army.js', () => {
 				a1.soldiers[i].hurt();
 			}
 			a1.valids.should.be.equal(1);
-			a1.allDead.should.be.equal(false);
 			await Promise.all([a1.attack(a2)]);
-			a1.allDead.should.be.equal(true);
 			a1.valids.should.be.equal(0);
 			a1.count.should.be.equal(0);
 		});
@@ -107,6 +105,32 @@ describe('army.js', () => {
 				a1.count.should.be.equal(0);
 			});
 			await Promise.all([a1.attack(a2)]);
+		});
+	});
+	describe('move army', async () => {
+		let a;
+		beforeEach(() => {
+			a = new Army('test', 0, 0, 1);
+		});
+		
+		afterEach(() => {
+			a.endWorld();
+		});
+
+		it('should be at 0, 0', async () => {
+			a.x.should.be.equal(0);
+			a.y.should.be.equal(0);
+		});
+		it('should move to 10, 10', async () => {
+			a.moveTo(10, 10);
+			a.init();
+			await new Promise(resolve => {
+				a.worldEvents.on('onDest', () => {
+					resolve();
+				});
+			});
+			a.x.should.be.equal(10);
+			a.y.should.be.equal(10);
 		});
 	});
 });

@@ -1,23 +1,16 @@
 const EventEmitter = require('events');
 const {Soldier} = require('./soldier');
+const {Entity} = require('./entity');
 
-class Army {
-	constructor(name, timeFactor) {
-		this.name_ = name || 'UNKARMY';
+class Army extends Entity{
+	constructor(name, x, y, timeFactor) {
+		super(name, x, y, 2, timeFactor);
 		this.soldiers_ = [];
-		this.worldEvents_ = new EventEmitter();
-		this.timeFactor_ = timeFactor || 1000;
 		this.allDead_ = false;
 	}
 
 	init() {
-		this.worldEvents_.on('allDead', () => {
-			for(let i=0; i < this.soldiers_.length; i++) {
-				if(this.soldiers_[i].isAlive) {
-					this.soldiers_[i].kill();
-				}
-			}
-		});
+		super.init();
 		for(let i = 0; i < this.soldiers_.length; i++) {
 			this.soldiers_[i].init();
 		}
@@ -32,7 +25,7 @@ class Army {
 	
 	add(nb) {
 		for(let i = 0; i < nb; i++) {
-			this.addSoldier(new Soldier('s', this.timeFactor_));
+			this.addSoldier(new Soldier('s', this.timeFactor_*10));
 		}
 	}
 
@@ -61,13 +54,13 @@ class Army {
 								if(Math.random() > 0.2) {
 									this.soldiers[i].hurt();
 								} else {
-									this.soldiers[i].die();
+									this.soldiers[i].endWorld();
 								}
 								other_touches--;
 							}
 						}
 					} else {
-						this.allDie();
+						this.endWorld();
 					}
 
 					if(self_touches < other.valids) {
@@ -76,13 +69,13 @@ class Army {
 								if(Math.random() > 0.2) {
 									other.soldiers[i].hurt();
 								} else {
-									other.soldiers[i].die();
+									other.soldiers[i].endWorld();
 								}
 								self_touches--;
 							}
 						}
 					} else {
-						other.allDie();
+						other.endWorld();
 					}
 					resolve();
 				}
@@ -131,7 +124,9 @@ class Army {
 		for(let i = 0; i < this.soldiers_.length; i++) {
 			this.soldiers_[i].endWorld();
 		}
+		this.allDead_ = true;
 		clearInterval(this.gaiaInterval_);
+		super.endWorld();
 	}
 }
 
