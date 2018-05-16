@@ -4,29 +4,29 @@ class Soldier {
   constructor(name, timeFactor) {
     this.name_ = name || 'UNKSOLDIER';
     this.hurt_ = false;
-		this.alive_ = true;
+    this.alive_ = true;
     this.worldEvents_ = new EventEmitter();
     this.timeFactor_ = timeFactor || 1000;
-		this.age_ = 0;
+    this.age_ = 0;
   }
 
   init() {
     this.gaiaInterval_ = setInterval(() => {
-			this.age_++;
+      this.age_++;
       if (!this.alive_ || Math.random() > 1-(this.age_-30)/100.0 - this.isHurt*0.1) {
-				this.alive_ = false;
-				this.worldEvents_.emit('die', this);
-				this.endWorld();
+        this.alive_ = false;
+        this.worldEvents_.emit('die', this);
+        this.endWorld();
       }
-			if(this.hurt_ && Math.random() > 0.95) {
-				this.hurt_ = false;
-			}
+      if(this.hurt_ && Math.random() > 0.95) {
+        this.hurt_ = false;
+      }
     }, this.timeFactor);
   }
 
   hurt() {
-		this.hurt_ = true;
-	}
+    this.hurt_ = true;
+  }
 
   get isHurt() {
     return this.hurt_;
@@ -44,16 +44,16 @@ class Soldier {
     return this.timeFactor_;
   }
 
-	get worldEvents() {
-		return this.worldEvents_;
-	}
+  get worldEvents() {
+    return this.worldEvents_;
+  }
 
-	get age() {
-		return this.age_;
-	}
+  get age() {
+    return this.age_;
+  }
 
   endWorld() {
-		this.alive_ = false;
+    this.alive_ = false;
     clearInterval(this.gaiaInterval_);
   }
 }

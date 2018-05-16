@@ -33,88 +33,90 @@ describe('army.js', () => {
     });
   });
 
-	describe('Attack', () => {
-		let a1;
-		let a2;
+  describe('Attack', () => {
+    let a1;
+    let a2;
 
-		beforeEach(() => {
-			a1 = new Army('A1', 0, 0, 1);
-			a2 = new Army('A2', 0, 0, 1);
-			a1.add(100);
-			a2.add(100);
-			a1.init();
-			a2.init();
-		});
+    beforeEach(() => {
+      a1 = new Army('A1', 0, 0, 1);
+      a2 = new Army('A2', 0, 0, 1);
+      a1.add(100);
+      a2.add(100);
+      a1.init();
+      a2.init();
+    });
 
-		afterEach(() => {
-			a1.endWorld();
-			a2.endWorld();
-		});
+    afterEach(() => {
+      a1.endWorld();
+      a2.endWorld();
+    });
 
-		it('should hurt soldiers', async () => {
-			a1.count.should.be.equal(100);
-			a1.valids.should.be.equal(100);
-			a2.count.should.be.equal(100);
-			a2.valids.should.be.equal(100);
+    it('should hurt soldiers', async () => {
+      a1.count.should.be.equal(100);
+      a1.valids.should.be.equal(100);
+      a2.count.should.be.equal(100);
+      a2.valids.should.be.equal(100);
 
-			await Promise.all([a1.attack(a2)]);
+      await Promise.all([a1.attack(a2)]);
 
-			a1.valids.should.be.below(100);
-			a2.valids.should.be.below(100);
-		});
+      a1.valids.should.be.below(100);
+      a2.valids.should.be.below(100);
+    });
 
-		it('hurt soldiers should not attack', async () => {
-			a1.count.should.be.equal(100);
-			a2.count.should.be.equal(100);
-			a2.valids.should.be.equal(100);
-			for(let i = 0; i < a1.soldiers.length; i++) {
-				a1.soldiers[i].hurt();
-			}
+    it('hurt soldiers should not attack', async () => {
+      a1.count.should.be.equal(100);
+      a2.count.should.be.equal(100);
+      a2.valids.should.be.equal(100);
+      for(let i = 0; i < a1.soldiers.length; i++) {
+        a1.soldiers[i].hurt();
+      }
 
-			a1.valids.should.be.equal(0);
+      a1.valids.should.be.equal(0);
 
-			await Promise.all([a1.attack(a2)]);
+      await Promise.all([a1.attack(a2)]);
 
-			a2.valids.should.be.equal(100);
-		});
+      a2.valids.should.be.equal(100);
+    });
 
-		it('should be all dead', async () => {
-			a1.count.should.be.equal(100);
-			a2.count.should.be.equal(100);
-			a2.valids.should.be.equal(100);
-			for(let i = 0; i < a1.soldiers.length - 1; i++) {
-				a1.soldiers[i].hurt();
-			}
-			a1.valids.should.be.equal(1);
-			await Promise.all([a1.attack(a2)]);
-			a1.valids.should.be.equal(0);
-			a1.count.should.be.equal(0);
-		});
-	});
-	describe('move army', async () => {
-		let a;
-		beforeEach(() => {
-			a = new Army('test', 0, 0, 1);
-		});
-		
-		afterEach(() => {
-			a.endWorld();
-		});
+    it('should be all dead', async () => {
+      a1.count.should.be.equal(100);
+      a2.count.should.be.equal(100);
+      a2.valids.should.be.equal(100);
+      for(let i = 0; i < a1.soldiers.length - 1; i++) {
+        a1.soldiers[i].hurt();
+      }
+      a1.valids.should.be.equal(1);
+      await Promise.all([a1.attack(a2)]);
+      a1.valids.should.be.equal(0);
+      a1.count.should.be.equal(0);
+    });
+  });
+  describe('move army', async () => {
+    let a;
+    beforeEach(() => {
+      a = new Army('test', 0, 0, 1);
+    });
+    
+    afterEach(() => {
+      a.endWorld();
+    });
 
-		it('should be at 0, 0', async () => {
-			a.x.should.be.equal(0);
-			a.y.should.be.equal(0);
-		});
-		it('should move to 10, 10', async () => {
-			a.moveTo(10, 10);
-			a.init();
-			await new Promise(resolve => {
-				a.worldEvents.on('onDest', () => {
-					resolve();
-				});
-			});
-			a.x.should.be.equal(10);
-			a.y.should.be.equal(10);
-		});
-	});
+    it('should be at 0, 0', async () => {
+      a.x.should.be.equal(0);
+      a.y.should.be.equal(0);
+    });
+    it('should move to 10, 10', async () => {
+      a.moveTo(10, 10);
+      a.init();
+      await new Promise(resolve => {
+        a.worldEvents.on('move', () => {
+          if(a.x === 10 && a.y === 10) {
+            resolve();
+          }
+        });
+      });
+      a.x.should.be.equal(10);
+      a.y.should.be.equal(10);
+    });
+  });
 });

@@ -25,10 +25,10 @@ describe('soldier.js', () => {
       s.isAlive.should.be.equal(true);
       s.init();
       await new Promise(resolve => {
-				s.worldEvents.on('die', () => {
-			  	resolve();
-				})
-			});
+        s.worldEvents.on('die', () => {
+          resolve();
+        })
+      });
       s.isAlive.should.be.equal(false);
     });
 
@@ -39,20 +39,20 @@ describe('soldier.js', () => {
       s.isHurt.should.be.equal(true);
     });
 
-		it('should kill soldier', async () => {
-			s.isAlive.should.be.equal(true);
-			s.endWorld();
-			s.isAlive.should.be.equal(false);
-		});
+    it('should kill soldier', async () => {
+      s.isAlive.should.be.equal(true);
+      s.endWorld();
+      s.isAlive.should.be.equal(false);
+    });
 
-		it('should emit event when soldier killed', async () => {
-			s.isAlive.should.be.equal(true);
-			s.worldEvents.on('die', () => {
-				s.isAlive.should.be.equal(false);
-			});
-			s.endWorld();
-		});
-	});
+    it('should emit event when soldier killed', async () => {
+      s.isAlive.should.be.equal(true);
+      s.worldEvents.on('die', () => {
+        s.isAlive.should.be.equal(false);
+      });
+      s.endWorld();
+    });
+  });
 
 /*    it('should update divinity\'s gold', async () => {
       g.gold.should.be.equal(0);
