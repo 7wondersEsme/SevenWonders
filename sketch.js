@@ -18,16 +18,22 @@ var entities = {};
 function setup() {
   var canvas = createCanvas(600, 300);
   canvas.parent('map');
-  /*socket.on('ready', () => {
+  socket.on('ready', () => {
+    console.log('ready received');
     socket.on('move', ent => {
       entities[ent.name] = ent;
     });
-  });*/
+  });
 }
  
 function draw() {
   background(255);
   for(e in entities) {
-    ellipse(entities[e].x, entities[e].y, 10, 10);
+    if(entities[e].type === 'army') {
+      rect(entities[e].x, entities[e].y, 10, 10);
+    }
+    if(entities[e].type === 'trader') {
+      ellipse(entities[e].x, entities[e].y, 10, 10);
+    }
   }
 }

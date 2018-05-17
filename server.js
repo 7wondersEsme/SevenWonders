@@ -1,6 +1,8 @@
 const http = require('http');
 const fs = require('fs');
 const {Entity} = require('./entity');
+const {Army} = require('./army');
+const {Trader} = require('./trader');
 
 let server = http.createServer((req, res) => {
   let path = req.url;
@@ -33,11 +35,20 @@ io.sockets.on('connection', socket => {
     console.log('action: ' + action);
     socket.emit('message', 'action taken into account: ' + action);
   });
-	let e = new Entity('test', 20, 20, 1, 1);
+  let e = new Army('test', 20, 20, 2, 1000);
+  let t = new Trader('test-t', 200, 200, 1, 1000);
   socket.emit('ready');
-  setInterval(() => {
-    socket.emit('move', e);
-  }, 100);
+  console.log("ready sent");
+  e.worldEvents.on('move', pos => {
+    socket.emit('move', {name: e.name, x: e.x, y: e.y, type: 'army'});
+  });
+  t.worldEvents.on('move', pos => {
+    socket.emit('move', {name: t.name, x: t.x, y: t.y, type: 'trader'});
+  });
+  t.init();
+  t.moveTo(200, 10);
+  e.init();
+  e.moveTo(100, 100);
 //  socket.emit('message', 'hello from serv');
 //  socket.emit('message', 'hello 2 from serv');
 });
