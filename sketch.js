@@ -1,17 +1,5 @@
-var socket = io.connect('http://ec2-18-218-126-224.us-east-2.compute.amazonaws.com:8080');
-//var socket = io.connect('http://localhost:8080');
-/*socket.on('ready', () => {
-  socket.on('message', message => {
-    alert(message);
-  });
-  $("p").on('click', () => {
-    socket.emit('action', 'test du click sur paragraphe');
-  });
-  $("button").on('click', () => {
-    socket.emit('action', 'test bouton');
-  });
-  console.log("ready");
-});*/
+//var socket = io.connect('http://ec2-18-218-126-224.us-east-2.compute.amazonaws.com:8080');
+var socket = io.connect('http://localhost:8080');
 
 var entities = {};
 
@@ -23,6 +11,15 @@ function setup() {
     socket.on('move', ent => {
       entities[ent.name] = ent;
     });
+		$("#1010").on('click', () => {
+			socket.emit('action', [{x: 0, y: 0}, {x: 0, y: 0}]);
+		});
+		$("#5050").on('click', () => {
+			socket.emit('action', [{x: 200, y: 0}, {x: 200, y: 0}]);
+		});
+		$("#debug").on('click', () => {
+			console.log(entities);
+		});
   });
 }
  

@@ -32,8 +32,9 @@ const io = require('socket.io').listen(server)
 io.sockets.on('connection', socket => {
   console.log('new client');
   socket.on('action', action => {
-    console.log('action: ' + action);
-    socket.emit('message', 'action taken into account: ' + action);
+		console.log(action);
+		t.moveTo(action[0].x, action[0].y);
+		e.moveTo(action[1].x, action[1].y);
   });
   let e = new Army('test', 20, 20, 2, 1000);
   let t = new Trader('test-t', 200, 200, 1, 1000);

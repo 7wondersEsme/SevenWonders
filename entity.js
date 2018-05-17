@@ -64,6 +64,10 @@ class Entity {
     return this.onDest_;
   }
 
+	get name() {
+		return this.name_;
+	}
+
   endWorld() {
     clearInterval(this.gaiaEntInterval_);
   }
