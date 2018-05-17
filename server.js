@@ -1,5 +1,6 @@
 const http = require('http');
 const fs = require('fs');
+const {Entity} = require('./entity');
 
 let server = http.createServer((req, res) => {
   let path = req.url;
@@ -32,20 +33,11 @@ io.sockets.on('connection', socket => {
     console.log('action: ' + action);
     socket.emit('message', 'action taken into account: ' + action);
   });
-	let X = 0;
-	let Y = 0;
+	let e = new Entity('test', 20, 20, 1, 1);
   socket.emit('ready');
-	setInterval(() => {
-		socket.emit('move', {x: X, y: Y});
-		X+=1;
-		Y+=1;
-		if(X > 600) {
-			X = 0;
-		}
-		if(Y > 300) {
-			Y = 0;
-		}
-	}, 10);
+  setInterval(() => {
+    socket.emit('move', e);
+  }, 100);
 //  socket.emit('message', 'hello from serv');
 //  socket.emit('message', 'hello 2 from serv');
 });

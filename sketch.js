@@ -1,5 +1,6 @@
-var socket = io.connect('http://localhost:8080');
-socket.on('ready', () => {
+var socket = io.connect('http://ec2-18-218-126-224.us-east-2.compute.amazonaws.com:8080');
+//var socket = io.connect('http://localhost:8080');
+/*socket.on('ready', () => {
   socket.on('message', message => {
     alert(message);
   });
@@ -10,23 +11,23 @@ socket.on('ready', () => {
     socket.emit('action', 'test bouton');
   });
   console.log("ready");
-});
+});*/
+
+var entities = {};
 
 function setup() {
   var canvas = createCanvas(600, 300);
   canvas.parent('map');
-	socket.on('move', pos => {
-	  background(255);
-	  ellipse(pos.x, pos.y, 2, 2);
-	});
+  /*socket.on('ready', () => {
+    socket.on('move', ent => {
+      entities[ent.name] = ent;
+    });
+  });*/
 }
-
+ 
 function draw() {
-/*  if(mouseIsPressed) {
-    fill(0);
-  } else {
-    fill(255);
+  background(255);
+  for(e in entities) {
+    ellipse(entities[e].x, entities[e].y, 10, 10);
   }
-  ellipse(mouseX, mouseY, 80, 80);
-*/
 }
