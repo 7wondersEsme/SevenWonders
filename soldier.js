@@ -13,12 +13,12 @@ class Soldier {
   init() {
     this.gaiaInterval_ = setInterval(() => {
       this.age_++;
-      if (!this.alive_ || Math.random() > 1-(this.age_-30)/100.0 - this.isHurt*0.1) {
+      if (!this.alive_ || Math.random() > 1 - ((this.age_ - 30) / 100.0) - (this.isHurt * 0.1)) {
         this.alive_ = false;
         this.worldEvents_.emit('die', this);
         this.endWorld();
       }
-      if(this.hurt_ && Math.random() > 0.95) {
+      if (this.hurt_ && Math.random() > 0.95) {
         this.hurt_ = false;
       }
     }, this.timeFactor);
@@ -48,7 +48,7 @@ class Soldier {
     return this.worldEvents_;
   }
 
-  get age() {
+  get age() {
     return this.age_;
   }
 

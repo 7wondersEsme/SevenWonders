@@ -1,77 +1,78 @@
-const EventEmitter = require('events');
 const {Soldier} = require('./soldier');
 const {Entity} = require('./entity');
 
-class Army extends Entity{
-  constructor(name, x, y, timeFactor) {
+class Army extends Entity {
+  constructor(name, x, y, nb, timeFactor) {
     super(name, x, y, 2, timeFactor);
-    this.soldiers_ = [];
+    this.soldiers_ = {};
+    this.nSoldiers_ = 0;
+    for (let i = 0; i < nb; i++) {
+      const soldier = new Soldier((++this.nSoldiers_).toString(), this.timeFactor_ * 10);
+      this.soldiers_[soldier.name] = soldier;
+    }
+
     this.allDead_ = false;
   }
 
   init() {
     super.init();
-    for(let i = 0; i < this.soldiers_.length; i++) {
-      this.soldiers_[i].init();
+    for (const s in this.soldiers_) {
+      this.soldiers_[s].init();
     }
 
     this.gaiaInterval_ = setInterval(() => {
     }, this.timeFactor_);
   }
 
-  addSoldier(s) {
-    this.soldiers_.push(s);
-  }
-  
-  add(nb) {
-    for(let i = 0; i < nb; i++) {
-      this.addSoldier(new Soldier('s', this.timeFactor_*10));
-    }
-  }
-
   attack(other) {
-    return new Promise((resolve, reject) => {
+    return new Promise(resolve => {
       setTimeout(() => {
-        let self_touches = 0;
-        if(this.allDead || other.allDead) {
+        let selfTouches = 0;
+        if (this.allDead || other.allDead) {
           resolve();
         } else {
-          for(let i = 0; i < this.valids; i++) {
-            if(Math.random() > 0.80) {
-              self_touches++;
+          for (let i = 0; i < this.valids; i++) {
+            if (Math.random() > 0.80) {
+              selfTouches++;
             }
           }
-          let other_touches = 0;
-          for(let i = 0; i < other.valids; i++) {
-            if(Math.random() > 0.80) {
-              other_touches++;
+          let otherTouches = 0;
+          for (let i = 0; i < other.valids; i++) {
+            if (Math.random() > 0.80) {
+              otherTouches++;
             }
           }
 
-          if(other_touches < this.valids) {
-            for(let i = 0; i < this.soldiers.length; i++) {
-              if(this.soldiers[i].isAlive && !this.soldiers[i].isHurt && other_touches > 0) {
-                if(Math.random() > 0.2) {
-                  this.soldiers[i].hurt();
+          if (otherTouches < this.valids) {
+            for (const s in this.soldiers_) {
+              if (this.soldiers[s].isAlive && !this.soldiers[s].isHurt && otherTouches > 0) {
+                if (Math.random() > 0.2) {
+                  this.soldiers[s].hurt();
                 } else {
-                  this.soldiers[i].endWorld();
+                  this.soldiers[s].endWorld();
+                  delete this.soldiers[s];
+                  this.nSoldiers_--;
+                  console.log('--');
                 }
-                other_touches--;
+                otherTouches--;
               }
             }
           } else {
             this.endWorld();
           }
 
-          if(self_touches < other.valids) {
-            for(let i = 0; i < other.soldiers.length; i++) {
-              if(other.soldiers[i].isAlive && !other.soldiers[i].isHurt && self_touches > 0) {
-                if(Math.random() > 0.2) {
-                  other.soldiers[i].hurt();
+          if (selfTouches < other.valids) {
+            for (const s in other.soldiers) {
+              if (other.soldiers[s].isAlive && !other.soldiers[s].isHurt && selfTouches > 0) {
+                if (Math.random() > 0.2) {
+                  other.soldiers[s].hurt();
                 } else {
-                  other.soldiers[i].endWorld();
+                  other.soldiers[s].endWorld();
+                  delete other.soldiers[s];
+                  other.nSoldiers--;
+                  console.log('--');
                 }
-                self_touches--;
+                selfTouches--;
               }
             }
           } else {
@@ -79,24 +80,27 @@ class Army extends Entity{
           }
           resolve();
         }
-      }, 5*this.timeFactor_);
+      }, 5 * this.timeFactor_);
     });
   }
 
   get count() {
     let count_ = 0;
-    for(let i = 0; i < this.soldiers_.length; i++) {
-      if (this.soldiers_[i].isAlive) {
+    let length_ = 0;
+    for (const s in this.soldiers_) {
+      if (this.soldiers_[s].isAlive) {
         count_++;
       }
+      length_++;
     }
+    console.log('count/length : ' + count_ + '/' + length_ + '/' + this.nSoldiers_);
     return count_;
   }
 
   get valids() {
     let count_ = 0;
-    for(let i = 0; i < this.soldiers_.length; i++) {
-      if (this.soldiers_[i].isAlive && !this.soldiers_[i].isHurt) {
+    for (const s in this.soldiers_) {
+      if (this.soldiers_[s].isAlive && !this.soldiers_[s].isHurt) {
         count_++;
       }
     }
@@ -105,6 +109,14 @@ class Army extends Entity{
 
   get soldiers() {
     return this.soldiers_;
+  }
+
+  get nSoldiers() {
+    return this.nSoldiers_;
+  }
+
+  set nSoldiers(n) {
+    this.nSoldiers_ = n;
   }
 
   get allDead() {
@@ -116,8 +128,8 @@ class Army extends Entity{
   }
 
   endWorld() {
-    for(let i = 0; i < this.soldiers_.length; i++) {
-      this.soldiers_[i].endWorld();
+    for (const s in this.soldiers_) {
+      this.soldiers_[s].endWorld();
     }
     this.allDead_ = true;
     clearInterval(this.gaiaInterval_);

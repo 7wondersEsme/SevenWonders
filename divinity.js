@@ -1,6 +1,5 @@
 const EventEmitter = require('events');
 
-
 class Divinity {
   constructor(name, timeFactor) {
     this.name_ = name || 'UNKDIVINITY';

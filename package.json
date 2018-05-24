@@ -4,6 +4,27 @@
     "chai-as-promised": "^7.1.1",
     "describe": "^1.2.0",
     "mocha": "^5.1.1",
-    "socket.io": "^2.1.0"
+    "socket.io": "^2.1.0",
+    "xo": "^0.21.0"
+  },
+  "scripts": {
+    "test": "xo"
+  },
+  "xo": {
+    "envs": [
+      "node",
+      "mocha"
+    ],
+    "space": 2,
+    "rules": {
+      "max -len": [
+        "error",
+        80,
+        2
+      ]
+    },
+    "ignores": [
+      "Gruntfile.js"
+    ]
   }
 }

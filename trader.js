@@ -1,12 +1,11 @@
-const EventEmitter = require('events');
 const {Entity} = require('./entity');
 
-class Trader extends Entity{
-  constructor(name, x, y, timeFactor) {
+class Trader extends Entity {
+  constructor(name, x, y, timeFactor) {
     super(name, x, y, 1, timeFactor);
     this.given_ = 0;
     this.taken_ = 0;
-    this.type_ = "gold";
+    this.type_ = 'gold';
   }
 
   init() {
@@ -20,18 +19,18 @@ class Trader extends Entity{
 
   trade() {
     return new Promise((resolve, reject) => {
-    //  if(this.taken_ !== 0) {
+    //  If(this.taken_ !== 0) {
       setTimeout(() => {
-        if(this.taken_ !== 0) {
+        if (this.taken_ === 0) {
+          reject(new Error('Trade already done'));
+        } else {
           this.given_ = Math.floor(this.taken_ * 1.1);
           this.taken_ = 0;
           resolve();
-        } else {
-          reject(new Error("Trade already done"));
         }
-      }, this.timeFactor*10);
+      }, this.timeFactor * 10);
     });
-  };
+  }
 
   kill() {
     this.taken_ = 0;

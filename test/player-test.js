@@ -10,7 +10,7 @@ describe('player.js', () => {
   describe('Player', () => {
     let p;
     beforeEach(() => {
-      p = new Player('test', 1);
+      p = new Player('test', 0, 0,  1);
     });
 
     afterEach(() => {
@@ -39,7 +39,7 @@ describe('player.js', () => {
 			await new Promise(resolve => {
 				setTimeout(() => {
 					resolve();
-				}, 20);
+				}, 30);
 			});
 			p.corn.should.be.above(110);
 			p.gold.should.be.above(110);
@@ -49,7 +49,7 @@ describe('player.js', () => {
 	describe('Upgrade', () => {
 		let p;
     beforeEach(() => {
-			p = new Player('test', 1);
+			p = new Player('test', 0, 0, 1);
 		});
 
 		afterEach(() => {
@@ -58,8 +58,91 @@ describe('player.js', () => {
 
 		it('should upgrade field', () => {
 			p.init();
-			p.upgradeField();
+			p.upgradeField().should.be.equal(true);
 			p.fieldLevel_.should.be.equal(1.3);
 		});
+
+		it('should upgrade market', () => {
+			p.init();
+			p.upgradeMarket().should.be.equal(true);
+			p.marketLevel_.should.be.equal(1.3);
+		});
+
+		it('shouldn\'t upgrade market because not enough gold', () => {
+			p.init();
+			p.gold_ = 0;
+			p.upgradeMarket().should.be.equal(false);
+			p.marketLevel_.should.be.equal(1);
+		});
+
+		it('shouldn\'t upgrade field because not enough gold', () => {
+			p.init();
+			p.gold_ = 0;
+			p.upgradeField().should.be.equal(false);
+			p.fieldLevel_.should.be.equal(1);
+		});
+	});
+
+	describe('Entities', () => {
+		let p;
+		beforeEach(() => {
+			p = new Player('j1', 0, 0, 1);
+		});
+
+		afterEach(() => {
+			p.endWorld();
+		});
+
+		it('should add trader', () => {
+			p.createTrader().should.be.equal(true);
+			Object.keys(p.entities).length.should.be.equal(1);
+		});
+
+		it('shouldn\'t add trader because not enough gold', () => {
+			p.gold_ = 0;
+			p.createTrader().should.be.equal(false);
+			Object.keys(p.entities).length.should.be.equal(0);
+		});
+
+		it('shouldn\'t add trader because not enough corn', () => {
+			p.corn_ = 0;
+			p.createTrader().should.be.equal(false);
+			Object.keys(p.entities).length.should.be.equal(0);
+		});
+
+		it('should add 2 traders', () => {
+			p.gold_ = 200;
+			p.corn_ = 200;
+			p.createTrader().should.be.equal(true);
+			p.createTrader().should.be.equal(true);
+			Object.keys(p.entities).length.should.be.equal(2);
+		});
+
+		it('should add army', () => {
+			p.corn_ = 1000;
+			p.gold_ = 1000;
+      p.createArmy(10).should.be.equal(true);
+      Object.keys(p.entities).length.should.be.equal(1);
+    });
+
+    it('shouldn\'t add army because not enough gold', () => {
+      p.gold_ = 0;
+      p.createArmy(1).should.be.equal(false);
+      Object.keys(p.entities).length.should.be.equal(0);
+    });
+
+    it('shouldn\'t add army because not enough corn', () => {
+      p.corn_ = 0;
+      p.createArmy(1).should.be.equal(false);
+      Object.keys(p.entities).length.should.be.equal(0);
+    });
+
+    it('should add 2 armies', () => {
+      p.gold_ = 200;
+      p.corn_ = 200;
+      p.createArmy(1).should.be.equal(true);
+      p.createArmy(1).should.be.equal(true);
+      Object.keys(p.entities).length.should.be.equal(2);
+    });
 	});
 });
